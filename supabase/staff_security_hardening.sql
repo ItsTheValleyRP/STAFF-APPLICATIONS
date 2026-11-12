@@ -113,16 +113,16 @@ grant select on table public.valley_application_audit to authenticated;
 -- ---------------------------------------------------------------------------
 
 create or replace function public.valley_portal_get_my_roles()
-returns table(scope text, role_key text, created_at timestamptz)
+returns table(scope text, role_key text)
 language sql
 stable
 security definer
 set search_path = public, pg_temp
 as $$
-  select 'system'::text, 'super_owner'::text, now()
+  select 'system'::text, 'super_owner'::text
   where auth.uid() is not null and public.valley_is_super_owner()
   union all
-  select r.scope, r.role_key, r.created_at
+  select r.scope, r.role_key
   from public.valley_application_roles r
   where r.user_id = auth.uid()
 $$;
