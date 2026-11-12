@@ -239,7 +239,7 @@ begin
 
   return true;
 end
-$;
+$$;
 
 -- ---------------------------------------------------------------------------
 -- 4) Remove default PUBLIC/anon execution and grant only authenticated users.
