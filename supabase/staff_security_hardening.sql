@@ -188,11 +188,11 @@ create or replace function public.valley_portal_review_application(
   p_status text,
   p_notes text default ''
 )
-returns void
+returns boolean
 language plpgsql
 security definer
 set search_path = public, pg_temp
-as $$
+as $
 declare
   v_app public.valley_applications%rowtype;
   v_notes text := coalesce(p_notes, '');
@@ -236,8 +236,10 @@ begin
     auth.uid(), v_app.applicant_id, p_application_id, 'application_reviewed',
     jsonb_build_object('department', v_app.department, 'status', p_status, 'notes', v_notes)
   );
+
+  return true;
 end
-$$;
+$;
 
 -- ---------------------------------------------------------------------------
 -- 4) Remove default PUBLIC/anon execution and grant only authenticated users.
