@@ -192,7 +192,7 @@ returns boolean
 language plpgsql
 security definer
 set search_path = public, pg_temp
-as $
+as $$
 declare
   v_app public.valley_applications%rowtype;
   v_notes text := coalesce(p_notes, '');
