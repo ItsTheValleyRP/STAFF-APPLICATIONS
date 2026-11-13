@@ -51,7 +51,7 @@ let user=null,roles=[],mine=[];
 function message(t,type='success'){$('message').textContent=t;$('message').className='notice '+type;$('message').classList.remove('hidden')}
 function clearMessage(){$('message').classList.add('hidden')}
 function isSuper(){return roles.some(r=>r.scope==='system'&&r.role_key==='super_owner')}
-function canReview(){return isSuper()||roles.some(r=>r.scope==='staff'&&['staff_owner','director','assistant_director','management'].includes(r.role_key))}
+function canReview(){return isSuper()||roles.some(r=>r.scope==='staff'&&['staff_owner','director','assistant_director','management','department_chief','department_command'].includes(r.role_key))}
 function tab(name){document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));['apply','mine','review'].forEach(n=>$('tab-'+n).classList.toggle('hidden',n!==name));if(name==='mine')loadMine();if(name==='review')loadReview()}
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
 async function login(){const {error}=await sb.auth.signInWithOAuth({provider:'discord',options:{redirectTo:location.href.split('#')[0]}});if(error)message(error.message,'error')}
