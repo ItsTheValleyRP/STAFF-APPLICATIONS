@@ -70,4 +70,37 @@ async function refresh(){const {data:{session}}=await sb.auth.getSession();user=
 const {data,error}=await sb.rpc('valley_portal_get_my_roles');if(error){message(error.message,'error');return}roles=data||[];$('review-tab').classList.toggle('hidden',!canReview());renderForm();await loadMine()}
 sb.auth.onAuthStateChange(()=>setTimeout(refresh,0));renderForm();refresh();
 </script>
+
+<script>
+/* Department website copy is managed centrally from the VALLEY application panel. */
+(()=> {
+ const department='staff';
+ if(!window.supabase)return;
+ const client=window.supabase.createClient('https://bqibeyeltgijvjghtnve.supabase.co','sb_publishable_Pb8W_qAqJPTCKV_cnoqgXg_aP_9fgXt');
+ const apply=content=>{
+  if(!content||typeof content!=='object')return;
+  const set=(selector,value)=>{const node=document.querySelector(selector);if(node&&typeof value==='string')node.textContent=value;};
+  set('.hero .eyebrow',content.hero_eyebrow);
+  const heading=document.querySelector('.hero h1');
+  if(heading){
+   const first=[...heading.childNodes].find(n=>n.nodeType===Node.TEXT_NODE);
+   if(first&&typeof content.hero_title_line1==='string')first.nodeValue=content.hero_title_line1+' ';
+   const highlight=heading.querySelector('span');
+   if(highlight&&typeof content.hero_title_line2==='string')highlight.textContent=content.hero_title_line2;
+  }
+  set('.hero > div:first-child > p',content.hero_description);
+  set('.hero-art .art-label',content.art_label);
+  set('.hero-art .art-title',content.art_title);
+  set('.hero-art .art-foot',content.art_foot);
+  if(typeof content.accent_color==='string'&&/^#[0-9a-f]{6}$/i.test(content.accent_color)){
+   document.documentElement.style.setProperty('--blue',content.accent_color);
+   document.documentElement.style.setProperty('--gold',content.accent_color);
+  }
+ };
+ const refresh=async()=>{const {data,error}=await client.rpc('valley_public_department_website_settings',{p_department:department});if(!error)apply(data);};
+ refresh();
+ window.setInterval(refresh,30000);
+})();
+</script>
+
 </body></html>
